@@ -1,0 +1,19 @@
+canvas {
+    border: 1px solid #411;
+    display: block;
+    margin: 0px auto;
+}
+
+.credits {
+    display: block;
+    padding: 10px;
+    margin: 0px auto;
+    text-align: center;
+}
+
+h1 {
+    display: block;
+    margin: 0px auto;
+    text-align: center;
+}
+
