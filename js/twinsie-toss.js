@@ -63,10 +63,35 @@ class Sprite {
     }
 }
 
+class Heart extends Sprite {
+    constructor(images, x, y) {
+        super(images[1], x, y);
+        this.images = images; // 0=EMPTY, 1=FULL
+    }
+
+    get full() {
+        return this.images[1] == this.image;
+    }
+
+    get empty() {
+        return !this.full;
+    }
+
+    set empty(value) {
+        this.image = this.images[value === true ? 0 : 1];
+    }
+
+    set full(value) {
+        this.empty = !value;
+    }
+
+}
+
 class HorizontalTile extends Sprite {
-    constructor(image, x, y, fullWidth) {
+    constructor(sound, image, x, y, fullWidth) {
         super(image, x, y);
-        this.fullWidth = fullWidth;;
+        this.fullWidth = fullWidth;
+        this.sound = sound;
     }
     get w() {
         return this.fullWidth;
@@ -123,6 +148,8 @@ let lydia;
 let bennett;
 let ground;
 let scene;
+let healthbar;
+let hp;
 
 let canvas;
 let ctx;
@@ -151,13 +178,25 @@ function draw() {
 
             // hits on right side of lucinda send twinsies to the right
             // hits on the left side of lucinda send twinsies to the left
-            twinsie.dx = (lucinda.x > twinsie.x) ? twinsie.dx * -1 : Math.abs(twinsie.dx);
+            twinsie.dx = Math.abs(twinsie.dx) * ((lucinda.x > twinsie.x) ? -1 : 1);
 
             // ensure any collision results in the twinsie be sent upward from above lucinda
             twinsie.y = lucinda.y - (lucinda.h/2) - 1;
             twinsie.dy *= -1;
 
         } else if (twinsie.collidesWith(ground)) {
+            ground.sound.play();
+            hp--;
+
+            // refill healthbar.
+            healthbar.forEach((heart, i) => {
+                if (i < hp) {
+                    heart.full = true;
+                } else {
+                    heart.empty = true;
+                }
+            });
+
             twinsie.dy *= -1;
         } else if (twinsie.leaving(scene)) {
             if (twinsie.y <= 0) {   // sky
@@ -189,6 +228,10 @@ function draw() {
     }
     ctx.restore();
 
+    ctx.save();
+    healthbar.forEach((heart) => ctx.drawImage(heart.image, heart.x, heart.y, heart.w, heart.h));
+    ctx.restore();
+
     if (!paused) {
         window.requestAnimationFrame(draw);
     }
@@ -200,9 +243,12 @@ function init() {
     const LYDIA = 'img/lydia.png';
     const BENNETT = 'img/bennett.png';
     const LUCINDA = 'img/lucinda.png';
+    const HEART_EMPTY = 'img/heart-empty.png';
+    const HEART_FULL = 'img/heart-full.png';
 
     const HIT1 = 'snd/hit1.ogg';
     const HIT2 = 'snd/hit2.ogg';
+    const SPLAT = 'snd/splat.ogg';
 
     canvas = document.getElementById("twinsie-toss");
     ctx = canvas.getContext("2d");
@@ -210,6 +256,7 @@ function init() {
     loadSounds([
         HIT1,
         HIT2,
+        SPLAT,
     ], (err, sounds) => {
         if (err) {
             return;
@@ -221,6 +268,8 @@ function init() {
             LYDIA,
             BENNETT,
             LUCINDA,
+            HEART_EMPTY,
+            HEART_FULL,
         ], (err, images) => {
             if (err) {
                 return;
@@ -230,7 +279,7 @@ function init() {
             scene = new Background(images[SCENE], 0, 0);
 
             // snap to bottom of canvas
-            ground = new HorizontalTile(images[GROUND], 0, canvas.height - images[GROUND].height, canvas.width);
+            ground = new HorizontalTile(sounds[SPLAT], images[GROUND], 0, canvas.height - images[GROUND].height, canvas.width);
 
             // center of canvas above the ground, follow mouse
             lucinda = new Tosser(images[LUCINDA],  canvas.width / 2, canvas.height - images[LUCINDA].height - images[GROUND].height, 'right');
@@ -257,6 +306,22 @@ function init() {
             lydia = new Twinsie(sounds[HIT1], images[LYDIA], 100, 100, Math.PI * Math.random() + 2, 3);
             bennett = new Twinsie(sounds[HIT2], images[BENNETT], 200, 300, Math.PI * Math.random() + 2, 4);
 
+            // health bar
+            healthbar = [
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 21, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 42, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 63, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 84, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 105, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 126, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 147, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 168, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 189, 6),
+                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 210, 6),
+            ];
+            hp = healthbar.length;
+
+            // TODO need better start screen
             ctx.save();
             ctx.font = "30px Comic Sans MS";
             ctx.fillStyle = "red";
