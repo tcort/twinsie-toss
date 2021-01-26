@@ -165,6 +165,10 @@ function draw() {
     ctx.restore();
 
     ctx.save();
+    healthbar.forEach((heart) => ctx.drawImage(heart.image, heart.x, heart.y, heart.w, heart.h));
+    ctx.restore();
+
+    ctx.save();
     var groundPattern = ctx.createPattern(ground.image, 'repeat');
     ctx.fillStyle = groundPattern;
     ctx.fillRect(ground.x, ground.y, canvas.width, ground.image.height);
@@ -226,10 +230,6 @@ function draw() {
     } else {
         ctx.drawImage(lucinda.image, lucinda.x, lucinda.y, lucinda.w, lucinda.h);
     }
-    ctx.restore();
-
-    ctx.save();
-    healthbar.forEach((heart) => ctx.drawImage(heart.image, heart.x, heart.y, heart.w, heart.h));
     ctx.restore();
 
     if (!paused) {
@@ -321,12 +321,26 @@ function init() {
             ];
             hp = healthbar.length;
 
-            // TODO need better start screen
+            // start screen
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             ctx.save();
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillStyle = "red";
+            ctx.drawImage(scene.image, scene.x, scene.y, scene.w, scene.h);
+            ctx.restore();
+
+            ctx.save();
+            var groundPattern = ctx.createPattern(ground.image, 'repeat');
+            ctx.fillStyle = groundPattern;
+            ctx.fillRect(ground.x, ground.y, canvas.width, ground.image.height);
+            ctx.restore();
+
+
+            ctx.save();
+            ctx.font = "24px Comic Sans MS";
+            ctx.fillStyle = "black";
             ctx.textAlign = "center";
-            ctx.fillText("Click to Start", canvas.width/2, canvas.height/2); 
+            ctx.fillText("Click to Start", canvas.width/2, 190); 
             ctx.restore();
 
         });
