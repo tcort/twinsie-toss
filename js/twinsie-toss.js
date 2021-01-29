@@ -311,13 +311,6 @@ function init() {
                 new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 21, 6),
                 new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 42, 6),
                 new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 63, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 84, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 105, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 126, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 147, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 168, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 189, 6),
-                new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 210, 6),
             ];
             hp = healthbar.length;
 
