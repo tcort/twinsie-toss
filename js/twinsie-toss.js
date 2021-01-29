@@ -150,6 +150,8 @@ let ground;
 let scene;
 let healthbar;
 let hp;
+let digits;
+let score;
 
 let canvas;
 let ctx;
@@ -160,12 +162,18 @@ let paused = true;
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.save();
+    ctx.save(); // background
     ctx.drawImage(scene.image, scene.x, scene.y, scene.w, scene.h);
     ctx.restore();
 
-    ctx.save();
+    ctx.save(); // health bar
     healthbar.forEach((heart) => ctx.drawImage(heart.image, heart.x, heart.y, heart.w, heart.h));
+    ctx.restore();
+
+    ctx.save(); // scoreboard
+    `${score}`.padStart(8, '0').split('').map((digit) => digits[parseInt(digit)]).forEach((img, index) => {
+        ctx.drawImage(img, 10 * index + 6, 6, img.width + 2, img.height + 2);
+    });
     ctx.restore();
 
     ctx.save();
@@ -187,6 +195,9 @@ function draw() {
             // ensure any collision results in the twinsie be sent upward from above lucinda
             twinsie.y = lucinda.y - (lucinda.h/2) - 1;
             twinsie.dy *= -1;
+
+            // award a point
+            score++;
 
         } else if (twinsie.collidesWith(ground)) {
             ground.sound.play();
@@ -247,6 +258,17 @@ function init() {
     const HEART_EMPTY = 'img/heart-empty.png';
     const HEART_FULL = 'img/heart-full.png';
 
+    const DIGIT_0 = 'img/0.png';
+    const DIGIT_1 = 'img/1.png';
+    const DIGIT_2 = 'img/2.png';
+    const DIGIT_3 = 'img/3.png';
+    const DIGIT_4 = 'img/4.png';
+    const DIGIT_5 = 'img/5.png';
+    const DIGIT_6 = 'img/6.png';
+    const DIGIT_7 = 'img/7.png';
+    const DIGIT_8 = 'img/8.png';
+    const DIGIT_9 = 'img/9.png';
+
     const HIT1 = 'snd/hit1.ogg';
     const HIT2 = 'snd/hit2.ogg';
     const SPLAT = 'snd/splat.ogg';
@@ -271,6 +293,16 @@ function init() {
             LUCINDA,
             HEART_EMPTY,
             HEART_FULL,
+            DIGIT_0,
+            DIGIT_1,
+            DIGIT_2,
+            DIGIT_3,
+            DIGIT_4,
+            DIGIT_5,
+            DIGIT_6,
+            DIGIT_7,
+            DIGIT_8,
+            DIGIT_9,
         ], (err, images) => {
             if (err) {
                 return;
@@ -314,6 +346,21 @@ function init() {
                 new Heart([ images[HEART_EMPTY], images[HEART_FULL ] ], canvas.width - 63, 6),
             ];
             hp = healthbar.length;
+
+            // digits for scoreboard
+            digits = [
+                images[DIGIT_0],
+                images[DIGIT_1],
+                images[DIGIT_2],
+                images[DIGIT_3],
+                images[DIGIT_4],
+                images[DIGIT_5],
+                images[DIGIT_6],
+                images[DIGIT_7],
+                images[DIGIT_8],
+                images[DIGIT_9],
+            ];
+            score = 0;
 
             // start screen
 
