@@ -207,6 +207,7 @@ function draw() {
                 twinsie.dy *= -1;
             } else {                // wall
                 twinsie.dx *= -1;
+                twinsie.x = (twinsie.x - twinsie.w <= 0) ? 1 : canvas.width - twinsie.w - 1;
             }
         }
         twinsie.move(); // update x,y positions
