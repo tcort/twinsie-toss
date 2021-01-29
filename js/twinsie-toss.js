@@ -159,6 +159,13 @@ let aud;
 
 let paused = true;
 
+function game_over() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.fillText("Game Over", canvas.width/2, 190); 
+    ctx.restore();
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -244,7 +251,10 @@ function draw() {
     }
     ctx.restore();
 
-    if (!paused) {
+    // is game over?
+    if (healthbar.every((heart) => heart.empty)) {
+        window.requestAnimationFrame(game_over);
+    } else if (!paused) {
         window.requestAnimationFrame(draw);
     }
 }
