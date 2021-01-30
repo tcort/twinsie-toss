@@ -161,8 +161,34 @@ let paused = true;
 
 function game_over() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // start screen
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     ctx.save();
-    ctx.fillText("Game Over", canvas.width/2, 190); 
+    ctx.drawImage(scene.image, scene.x, scene.y, scene.w, scene.h);
+    ctx.restore();
+
+    ctx.save();
+    var groundPattern = ctx.createPattern(ground.image, 'repeat');
+    ctx.fillStyle = groundPattern;
+    ctx.fillRect(ground.x, ground.y, canvas.width, ground.image.height);
+    ctx.restore();
+
+
+    ctx.save();
+    ctx.font = "24px Comic Sans MS";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over", canvas.width/2, 150);
+    ctx.restore();
+
+    ctx.save();
+    ctx.font = "24px Comic Sans MS";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText(`Your Score: ${score}`, canvas.width/2, 190);
     ctx.restore();
 }
 
