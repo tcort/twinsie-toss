@@ -227,7 +227,7 @@ function draw() {
 
             // ensure any collision results in the twinsie be sent upward from above lucinda
             twinsie.y = lucinda.y - (lucinda.h/2) - 1;
-            twinsie.dy *= -1;
+            twinsie.dy = Math.abs(twinsie.dy) * -1;
 
             // award a point
             score++;
@@ -248,9 +248,9 @@ function draw() {
             twinsie.dy *= -1;
         } else if (twinsie.leaving(scene)) {
             if (twinsie.y <= 0) {   // sky
-                twinsie.dy *= -1;
+                twinsie.dy = Math.abs(twinsie.dy);
             } else {                // wall
-                twinsie.dx *= -1;
+                twinsie.dx = Math.abs(twinsie.dx) * (twinsie.x < 0 ? 1 : -1);
                 twinsie.x = (twinsie.x - twinsie.w <= 0) ? 1 : canvas.width - twinsie.w - 1;
             }
         }
