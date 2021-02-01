@@ -162,7 +162,7 @@ let paused = true;
 function game_over() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // start screen
+    // game over screen
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -190,6 +190,8 @@ function game_over() {
     ctx.textAlign = "center";
     ctx.fillText(`Your Score: ${score}`, canvas.width/2, 190);
     ctx.restore();
+
+    setTimeout(() => location.reload(), 3000);
 }
 
 function draw() {
